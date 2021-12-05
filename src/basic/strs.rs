@@ -7,6 +7,7 @@ pub fn inf(a: &str) -> String {
     );
     b
 }
+#[allow(unused_macros)]
 macro_rules! inf{
     ($a:expr) => {
         println!("{}", inf($a));
@@ -20,6 +21,7 @@ pub fn err(a: &str) -> String {
     );
     b
 }
+#[allow(unused_macros)]
 macro_rules! err{
     ($a:expr) => {
         println!("{}", err($a));

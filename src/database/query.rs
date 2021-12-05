@@ -62,7 +62,3 @@ pub fn search(str: &str) -> Vec<Package> {
     }
     packages
 }
-
-
-
-
