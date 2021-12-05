@@ -1,6 +1,6 @@
 use crate::basic::structs::Package;
-use std::path::Path;
 use rusqlite::{Connection, Error};
+use std::path::Path;
 
 pub fn remove(pkg: Package) -> Result<(), Error> {
     let dbpath = Path::new("/var/libdotpm/db.sqlite");

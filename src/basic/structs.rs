@@ -8,10 +8,22 @@ pub struct Package {
     pub dependencies: Option<Vec<String>>,
     pub provides: Option<Vec<String>>,
     pub conflicts: Option<Vec<String>>,
-    pub arch: String
+    pub arch: String,
 }
 impl Package {
-    pub fn new(name: String, version: String, description: Option<String>, authors: Vec<String>, license: Option<String>, tracked_files: Vec<String>, dependencies: Option<Vec<String>>, provides: Option<Vec<String>>, conflicts: Option<Vec<String>>, arch: String) -> Package {
+    #[allow(clippy::too_many_arguments)]
+    pub fn new(
+        name: String,
+        version: String,
+        description: Option<String>,
+        authors: Vec<String>,
+        license: Option<String>,
+        tracked_files: Vec<String>,
+        dependencies: Option<Vec<String>>,
+        provides: Option<Vec<String>>,
+        conflicts: Option<Vec<String>>,
+        arch: String,
+    ) -> Package {
         Package {
             name,
             version,
@@ -22,7 +34,7 @@ impl Package {
             dependencies,
             provides,
             conflicts,
-            arch
+            arch,
         }
     }
 }
