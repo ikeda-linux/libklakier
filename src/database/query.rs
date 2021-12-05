@@ -1,36 +1,44 @@
+use crate::basic::structs::Package;
+use std::path::Path;
+use rusqlite::Connection;
 
-pub fn query(str: &str) -> Vec<Package> {
-    let dbpath = Path::new("/var/libdotpm/db.sqlite");
-    let conn = Connection::open(dbpath).unwrap();
-    let mut stmt = conn.prepare(str).unwrap();
-    let rows = stmt.query_map(&[], |row| {
-        let name: String = row.get(0);
-        let version: String = row.get(1);
-        let description: String = row.get(2);
-        let authors: String = row.get(3);
-        let license: String = row.get(4);
-        let tracked_files: String = row.get(5);
-        let dependencies: String = row.get(6);
-        let provides: String = row.get(7);
-        let conflicts: String = row.get(8);
-        let arch: String = row.get(9);
-        Package {
-            name,
-            version,
-            description,
-            authors,
-            license,
-            tracked_files,
-            dependencies,
-            provides,
-            conflicts,
-            arch,
-        }
+// this returns a package struct that exactly matches the str in the name field
+pub fn query(str: &str) -> Package {
+    let path = Path::new("/var/libdotpm/db.sqlite");
+    let conn = Connection::open(path).unwrap();
+    let mut stmt = conn.prepare("SELECT * FROM packages WHERE name = ?").unwrap();
+    let rows = stmt.query_map(&[&str], |row| {
+        Ok(Package {
+            name: row.get(0).unwrap(),
+            version: row.get(1).unwrap(),
+            description: row.get(2).unwrap(),
+            license: row.get(4).unwrap(),
+            authors: row.get::<usize, String>(5).unwrap().split(" || ").map(|s| s.to_string()).collect::<Vec<String>>(),
+            tracked_files: row.get::<usize, String>(6).unwrap().split(" || ").map(|s| s.to_string()).collect::<Vec<String>>(),
+            dependencies: Some(row.get::<usize, String>(7).unwrap().split(" || ").map(|s| s.to_string()).collect::<Vec<String>>()),
+            provides: Some(row.get::<usize, String>(8).unwrap().split(" || ").map(|s| s.to_string()).collect::<Vec<String>>()),
+            conflicts: Some(row.get::<usize, String>(9).unwrap().split(" || ").map(|s| s.to_string()).collect::<Vec<String>>()),
+            arch: row.get(10).unwrap(),
+        })
     }).unwrap();
-    let mut packages: Vec<Package> = Vec::new();
+    let mut package = Package {
+        name: "".to_string(),
+        version: "".to_string(),
+        description: Some("".to_string()),
+        license: Some("".to_string()),
+        authors: vec!["".to_string()],
+        tracked_files: vec!["".to_string()],
+        dependencies: Some(vec!["".to_string()]),
+        provides: Some(vec!["".to_string()]),
+        conflicts: Some(vec!["".to_string()]),
+        arch: "".to_string()
+    };
     for row in rows {
-        let pkg = row.unwrap();
-        packages.push(pkg);
+        package = row.unwrap();
     }
-    packages
+    package
 }
+
+
+
+
