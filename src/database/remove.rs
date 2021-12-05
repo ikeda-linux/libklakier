@@ -1,4 +1,4 @@
-use crate::{basic::structs::Package, database::initialise::DATABASE_PATH};
+use crate::{base::structs::Package, database::initialise::DATABASE_PATH};
 use rusqlite::{Connection, Error};
 use std::path::Path;
 

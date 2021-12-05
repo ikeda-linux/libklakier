@@ -22,6 +22,12 @@ pub fn initialise() -> Result<()> {
             )",
             [],
         )?;
+        conn.execute(
+            "CREATE TABLE IF NOT EXISTS SETTINGS (
+                KEY TEXT PRIMARY KEY,                
+            )",
+            [],
+        )?;
     }
     Ok(())
 }
