@@ -1,8 +1,10 @@
 use rusqlite::{Connection, Result};
 use std::path::Path;
 
+pub static DATABASE_PATH: &str = "/var/libdlta/db.sqlite";
+
 pub fn initialise() -> Result<()> {
-    let dbpath = Path::new("/var/libdotpm/db.sqlite");
+    let dbpath = Path::new(DATABASE_PATH);
     if !dbpath.exists() {
         let conn = Connection::open(dbpath)?;
         conn.execute(

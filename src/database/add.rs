@@ -1,9 +1,9 @@
-use crate::basic::structs::Package;
+use crate::{basic::structs::Package, database::initialise::DATABASE_PATH};
 use rusqlite::{Connection, Error};
 use std::path::Path;
 
 pub fn add(pkg: Package) -> Result<(), Error> {
-    let dbpath = Path::new("/var/libdotpm/db.sqlite");
+    let dbpath = Path::new(DATABASE_PATH);
     let mut conn = Connection::open(dbpath)?;
     let tx = conn.transaction()?;
     tx.execute("INSERT INTO packages (name, version, description, authors, license, tracked_files, dependencies, provides, conflicts, arch) VALUES (:name, :version, :description, :authors, :license, :tracked_files, :dependencies, :provides, :conflicts, :arch)", &[&pkg.name, 

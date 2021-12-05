@@ -1,2 +1,2 @@
-# libdotpm
-backend library for dotpm, Ikeda's package manager
+# libdlta
+Backend library for dlta, Ikeda's package manager

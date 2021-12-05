@@ -2,11 +2,11 @@ use crate::{basic::structs::Package, database::initialise::DATABASE_PATH};
 use rusqlite::Connection;
 use std::path::Path;
 
-pub fn query(str: &str) -> Package {
+pub fn search(str: &str) -> Vec<Package> {
     let path = Path::new(DATABASE_PATH);
     let conn = Connection::open(path).unwrap();
     let mut stmt = conn
-        .prepare("SELECT * FROM packages WHERE name = ?")
+        .prepare("SELECT * FROM packages WHERE name LIKE ?")
         .unwrap();
     let rows = stmt
         .query_map(&[&str], |row| {
@@ -52,20 +52,9 @@ pub fn query(str: &str) -> Package {
             })
         })
         .unwrap();
-    let mut package = Package {
-        name: "".to_string(),
-        version: "".to_string(),
-        description: Some("".to_string()),
-        license: Some("".to_string()),
-        authors: vec!["".to_string()],
-        tracked_files: vec!["".to_string()],
-        dependencies: Some(vec!["".to_string()]),
-        provides: Some(vec!["".to_string()]),
-        conflicts: Some(vec!["".to_string()]),
-        arch: "".to_string(),
-    };
+    let mut packages = vec![];
     for row in rows {
-        package = row.unwrap();
+        packages.push(row.unwrap());
     }
-    package
+    packages
 }

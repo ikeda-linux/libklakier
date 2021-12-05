@@ -1,5 +1,5 @@
 [package]
-name = "libdotpm"
+name = "libdlta"
 version = "0.1.0"
 edition = "2021"
 
@@ -8,3 +8,9 @@ edition = "2021"
 [dependencies]
 rusqlite = "0.26.1"
 ansi_term = "0.12.1"
+tar = "0.4.37"
+blake2 = "*"
+zstd_util = "0.1.1"
+toml = "0.5.8"
+serde_derive = "1.0.130"
+serde = "1.0.130"

@@ -1,3 +1,5 @@
+// todo move this to dlta
+
 use ansi_term::Colour;
 
 pub fn inf(a: &str) -> String {
