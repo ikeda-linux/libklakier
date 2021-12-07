@@ -18,7 +18,7 @@ pub fn install(pkg: &Path) -> Result<(), Box<dyn Error>> {
     let mut hasher = Blake2b::new();
     hasher.update(fs::read(pkg).unwrap());
     let hash = hasher.finalize();
-    let hash = String::from_utf8_lossy(hash.as_slice());
+    let hash = String::from_utf8_lossy(hash.as_slice()).replace(|c: char| !c.is_ascii(), "");;
 
     // create directory strings to use later
     let dir = format!("/tmp/libdlta/{}", hash);
