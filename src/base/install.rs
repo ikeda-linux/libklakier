@@ -46,9 +46,8 @@ pub fn install(pkg: &Path) -> Result<(), Box<dyn Error>> {
     for entry in fs::read_dir(overlay_path).unwrap() {
         let entry = entry.unwrap();
         let path = entry.path();
-        let dest = format!("{}/{}", path.parent().unwrap().to_str().unwrap(), path.file_name().unwrap().to_str().unwrap());
-        fs::copy(&path, &dest).unwrap_or_else(|_| {
-            panic!("Failed to copy {} to {}", path.display(), dest);
+        fs::copy(&path, "/").unwrap_or_else(|_| {
+            panic!("Failed to copy {} to the rootfs", path.display());
         });
     }
 
