@@ -44,12 +44,14 @@ pub fn install(pkg: &Path) -> Result<(), Box<dyn Error>> {
     // copies everything from the overlay/ directory directly into /
     let overlay = format!("/tmp/libdlta/{}/overlay", hash);
     // temporary workaround
+    for entry in Path::new(&overlay) {
     Command::new("cp")
-        .args(&["-r", &overlay, "/"])
+        .args(&["-r", &entry.to_string_lossy().to_string(), "/"])
         .status()
         .unwrap_or_else(|err| {
             panic!("Failed to copy overlay: {}", err);
         });
+    }
 
     // adds the package to the database
     let pkginfo: Package = toml::from_str(&fs::read_to_string(format!("{}/md.toml", &dir)).unwrap()).unwrap();
