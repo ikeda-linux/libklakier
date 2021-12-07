@@ -1,9 +1,8 @@
-use crate::{base::structs::Package, database::initialise::DATABASE_PATH};
+use crate::base::structs::Package;
 use rusqlite::Connection;
 use std::path::Path;
 
-pub fn query(str: &str) -> Package {
-    let path = Path::new(DATABASE_PATH);
+pub fn query(str: &str, path: &Path) -> Package {
     let conn = Connection::open(path).unwrap();
     let mut stmt = conn
         .prepare("SELECT * FROM packages WHERE name = ?")

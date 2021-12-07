@@ -3,8 +3,7 @@ use std::path::Path;
 
 pub static DATABASE_PATH: &str = "/var/libdlta/db.sqlite";
 
-pub fn initialise() -> Result<()> {
-    let dbpath = Path::new(DATABASE_PATH);
+pub fn initialise(dbpath: &Path, os: bool) -> Result<()> {
     if !dbpath.exists() {
         let conn = Connection::open(dbpath)?;
         conn.execute(
@@ -22,12 +21,14 @@ pub fn initialise() -> Result<()> {
             )",
             [],
         )?;
-        conn.execute(
-            "CREATE TABLE IF NOT EXISTS SETTINGS (
-                KEY TEXT PRIMARY KEY,                
-            )",
-            [],
-        )?;
+        if os == true {
+                conn.execute(
+                "CREATE TABLE IF NOT EXISTS SETTINGS (
+                    KEY TEXT PRIMARY KEY,                
+                )",
+                [],
+            )?;
+        }
     }
     Ok(())
 }

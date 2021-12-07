@@ -36,7 +36,7 @@ pub fn install(pkg: &Path) -> Result<(), Box<dyn Error>> {
 
     // initialise the database if not already found
     if !Path::new("/var/libdlta/db.sqlite").exists() {
-        database::initialise::initialise().unwrap_or_else(|err| {
+        database::initialise::initialise(Path::new(database::initialise::DATABASE_PATH), true).unwrap_or_else(|err| {
             panic!("Failed to initialise database: {}", err);
         });
     }
@@ -52,7 +52,7 @@ pub fn install(pkg: &Path) -> Result<(), Box<dyn Error>> {
 
     // adds the package to the database
     let pkginfo: Package = toml::from_str(&fs::read_to_string(format!("{}/md.toml", &dir)).unwrap()).unwrap();
-    database::add::add(pkginfo).unwrap_or_else(|err| {
+    database::add::add(pkginfo, Path::new(crate::database::initialise::DATABASE_PATH)).unwrap_or_else(|err| {
         panic!("Failed to add package to database: {}", err);
     });
 

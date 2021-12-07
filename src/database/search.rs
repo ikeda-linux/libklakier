@@ -1,9 +1,8 @@
-use crate::{base::structs::Package, database::initialise::DATABASE_PATH};
+use crate::base::structs::Package;
 use rusqlite::Connection;
 use std::path::Path;
 
-pub fn search(str: &str) -> Vec<Package> {
-    let path = Path::new(DATABASE_PATH);
+pub fn search(str: &str, path: &Path) -> Vec<Package> {
     let conn = Connection::open(path).unwrap();
     let mut stmt = conn
         .prepare("SELECT * FROM packages WHERE name LIKE ?")

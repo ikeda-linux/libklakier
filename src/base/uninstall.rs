@@ -1,9 +1,10 @@
+use std::path::Path;
 use crate::database::{query::query, remove::remove};
 
 #[allow(dead_code)]
 pub fn uninstall(pkg: &str) {
     // queries the database for the package that exactly matches pkg
-    let res = query(pkg);
+    let res = query(pkg, Path::new(crate::database::initialise::DATABASE_PATH));
     let files = &res.tracked_files;
 
     // deletes the files
@@ -14,7 +15,7 @@ pub fn uninstall(pkg: &str) {
     }
 
     // removes the package from the database
-    remove(res).unwrap_or_else(|_| {
+    remove(res, Path::new(crate::database::initialise::DATABASE_PATH)).unwrap_or_else(|_| {
         panic!("Could not delete package from database");
     });
 }
