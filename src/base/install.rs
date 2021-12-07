@@ -1,4 +1,4 @@
-use std::{path::Path, fs::{File, self}, error::Error};
+use std::{path::Path, fs::{File, self}, error::Error, process::Command};
 use blake2::{Blake2b, Digest};
 use zstd_util::ZstdContext;
 use tar::Archive;
@@ -42,13 +42,14 @@ pub fn install(pkg: &Path) -> Result<(), Box<dyn Error>> {
     }
 
     // copies everything from the overlay/ directory directly into /
-    let overlay = format!("/tmp/libdlta/{}/overlay", hash);
-    let overlay_dir = Path::new(&overlay);
-    for entry in overlay_dir {
-        fs::copy(entry, "/").unwrap_or_else(|err| {
-            panic!("Failed to copy overlay/ to /: {}", err);
+    let overlay = format!("/tmp/libdlta/{}/overlay*", hash);
+    // temporary workaround
+    Command::new("cp")
+        .args(&["-r", &overlay, "/"])
+        .status()
+        .unwrap_or_else(|err| {
+            panic!("Failed to copy overlay: {}", err);
         });
-    }   
 
     // adds the package to the database
     let pkginfo: Package = toml::from_str(&fs::read_to_string(format!("{}/md.toml", &dir)).unwrap()).unwrap();
