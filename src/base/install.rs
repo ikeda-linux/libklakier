@@ -23,7 +23,6 @@ pub fn install(pkg: &Path) -> Result<(), Box<dyn Error>> {
     // create directory strings to use later
     let dir = format!("/tmp/libdlta/{}", hash);
     let infl_path = format!("/tmp/libdlta/{}/package.tar", hash);
-    let outpath = format!("/tmp/libdlta/{}/out", hash);
 
     // create the actual directories to unpack to
     fs::create_dir_all(&dir).unwrap();
@@ -43,7 +42,7 @@ pub fn install(pkg: &Path) -> Result<(), Box<dyn Error>> {
     }
 
     // copies the files from the package's overlay/ directory directly into the rootfs
-    for entry in fs::read_dir(format!("{}/overlay", outpath)).unwrap() {
+    for entry in fs::read_dir(format!("{}/overlay", &dir)).unwrap() {
         let entry = entry.unwrap();
         let path = entry.path();
         if path.is_dir() {
@@ -56,7 +55,7 @@ pub fn install(pkg: &Path) -> Result<(), Box<dyn Error>> {
     }
 
     // adds the package to the database
-    let pkginfo: Package = toml::from_str(&fs::read_to_string(format!("{}/md.toml", outpath)).unwrap()).unwrap();
+    let pkginfo: Package = toml::from_str(&fs::read_to_string(format!("{}/md.toml", &dir)).unwrap()).unwrap();
     database::add::add(pkginfo).unwrap_or_else(|_| {
         panic!("Failed to add package to database");
     });
