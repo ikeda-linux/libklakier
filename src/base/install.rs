@@ -42,7 +42,7 @@ pub fn install(pkg: &Path) -> Result<(), Box<dyn Error>> {
     }
 
     // copies everything from the overlay/ directory directly into /
-    let overlay = format!("/tmp/libdlta/{}/overlay/*", hash);
+    let overlay = format!("/tmp/libdlta/{}/overlay", hash);
     // temporary workaround
     Command::new("cp")
         .args(&["-r", &overlay, "/"])
