@@ -91,4 +91,21 @@ impl SrcPackage {
             repo
         }
     }
+    pub fn create(str: &str) -> Self {
+        SrcPackage {
+            name: str.to_string(),
+            version: "0.1.0".to_string(),
+            description: None,
+            authors: Vec::new(),
+            license: None,
+            tracked_files: Vec::new(),
+            dependencies: None,
+            provides: None,
+            conflicts: None,
+            arch: None,
+            remote: false,
+            vcs: None,
+            repo: None
+        }
+    }
 }
