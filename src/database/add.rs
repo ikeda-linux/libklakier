@@ -6,7 +6,8 @@ pub fn add(pkg: Package) -> Result<(), Error> {
     let dbpath = Path::new(DATABASE_PATH);
     let mut conn = Connection::open(dbpath)?;
     let tx = conn.transaction()?;
-    tx.execute("INSERT INTO packages (name, version, description, authors, license, tracked_files, dependencies, provides, conflicts, arch) VALUES (:name, :version, :description, :authors, :license, :tracked_files, :dependencies, :provides, :conflicts, :arch)", &[&pkg.name, 
+    tx.execute("INSERT INTO packages (name, version, description, authors, license, tracked_files, dependencies, provides, conflicts, arch) VALUES (:name, :version, :description, :authors, :license, :tracked_files, :dependencies, :provides, :conflicts, :arch)", &[
+        &pkg.name, 
         &pkg.version,
         &pkg.description.unwrap_or_else(|| "".to_string()),
         &pkg.authors.join(" || "),

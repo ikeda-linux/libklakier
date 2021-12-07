@@ -8,5 +8,7 @@ pub fn freeze(oper: bool) {
     conn.execute(
         "UPDATE SETTINGS SET FREEZE = ? WHERE ID = 1",
         &[&oper],
-    )
+    ).unwrap_or_else(|e| {
+        panic!("Error updating settings table: {}", e);
+    });
 }

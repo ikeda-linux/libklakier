@@ -9,7 +9,7 @@ use super::structs::Package;
 #[allow(dead_code)]
 pub fn install(pkg: &Path) -> Result<(), Box<dyn Error>> {
     // decompress the .tar.zst packagefile
-    let mut zstd = ZstdContext::new(11, Some(&[0,16]));
+    let mut zstd = ZstdContext::new(11, Some(&[]));
     let inflated = zstd.decompress(&fs::read(pkg).unwrap()).unwrap_or_else(|_| {
         panic!("Failed to decompress {}", pkg.display());
     });
