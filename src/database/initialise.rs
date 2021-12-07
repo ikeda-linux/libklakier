@@ -21,7 +21,7 @@ pub fn initialise(dbpath: &Path, os: bool) -> Result<()> {
             )",
             [],
         )?;
-        if os == true {
+        if os {
                 conn.execute(
                 "CREATE TABLE IF NOT EXISTS SETTINGS (
                     KEY TEXT PRIMARY KEY,                
