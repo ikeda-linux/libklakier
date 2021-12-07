@@ -41,18 +41,14 @@ pub fn install(pkg: &Path) -> Result<(), Box<dyn Error>> {
         });
     }
 
-    // copies all of the files from the overlay/ directory directly into /
-    let overlay_path = format!("{}/overlay", dir);
-    for entry in fs::read_dir(overlay_path).unwrap() {
-        let entry = entry.unwrap();
-        let path = entry.path();
-        fs::copy(&path, "/").unwrap_or_else(|_| {
-            panic!("Failed to copy {} to the rootfs", path.display());
+    // copies everything from the overlay/ directory directly into /
+    let overlay = format!("/tmp/libdlta/{}/overlay", hash);
+    let overlay_dir = Path::new(&overlay);
+    for entry in overlay_dir {
+        fs::copy(entry, "/").unwrap_or_else(|_| {
+            panic!("Failed to copy overlay/ to /");
         });
-    }
-
-    // remove the temporary directory
-
+    }   
 
     // adds the package to the database
     let pkginfo: Package = toml::from_str(&fs::read_to_string(format!("{}/md.toml", &dir)).unwrap()).unwrap();
