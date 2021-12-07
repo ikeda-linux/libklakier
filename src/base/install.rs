@@ -43,10 +43,12 @@ pub fn install(pkg: &Path) -> Result<(), Box<dyn Error>> {
     }
 
     // copies everything from the overlay/ directory directly into /
-    let mut overlay = glob(&format!("/tmp/libdlta/{}/overlay/*", hash)).unwrap();
-    fs::copy(overlay.next().unwrap().unwrap(), "/").unwrap_or_else(|err| {
-        panic!("Failed to copy overlay: {}", err);
-    });
+    let overlay = glob(&format!("/tmp/libdlta/{}/overlay/*", hash)).unwrap();
+    for entry in overlay.into_iter() {
+        fs::copy(entry.unwrap(), "/").unwrap_or_else(|err| {
+            panic!("Failed to copy overlay: {}", err);
+        });
+    }
 
     // adds the package to the database
     let pkginfo: Package = toml::from_str(&fs::read_to_string(format!("{}/md.toml", &dir)).unwrap()).unwrap();
