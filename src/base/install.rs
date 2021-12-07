@@ -1,4 +1,4 @@
-use std::{path::Path, fs::{File, self}, error::Error};
+use std::{path::Path, fs::{File, self}, error::Error, process::Command};
 use blake2::{Blake2b, Digest};
 use zstd_util::ZstdContext;
 use tar::Archive;
@@ -44,7 +44,13 @@ pub fn install(pkg: &Path) -> Result<(), Box<dyn Error>> {
 
     // copies everything from the overlay/ directory directly into /
 
-    // TODO: MAKE IT ACTUALLY COPY THE FILES
+    let overlay = format!("{}/overlay/.", dir);
+    Command::new("cp")
+        .args(&["-r", &overlay, "/"])
+        .status()
+        .unwrap_or_else(|err| {
+            panic!("Failed to copy overlay: {}", err);
+        });
 
     // remove the temporary directory
 
