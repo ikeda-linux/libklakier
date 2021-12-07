@@ -41,18 +41,19 @@ pub fn install(pkg: &Path) -> Result<(), Box<dyn Error>> {
         });
     }
 
-    // copies the files from the package's overlay/ directory directly into the rootfs
-    for entry in fs::read_dir(format!("{}/overlay", &dir)).unwrap() {
+    // copies all of the files from the overlay/ directory directly into /
+    let overlay_path = format!("{}/overlay", dir);
+    for entry in fs::read_dir(overlay_path).unwrap() {
         let entry = entry.unwrap();
         let path = entry.path();
-        if path.is_dir() {
-            fs::create_dir_all(format!("/{}", path.to_str().unwrap())).unwrap();
-        } else {
-            fs::copy(&path, format!("/{}", path.to_str().unwrap())).unwrap_or_else(|_| {
-                panic!("Failed to copy {}", path.to_str().unwrap());
-            });
-        }
+        let dest = format!("{}/{}", path.parent().unwrap().to_str().unwrap(), path.file_name().unwrap().to_str().unwrap());
+        fs::copy(&path, &dest).unwrap_or_else(|_| {
+            panic!("Failed to copy {} to {}", path.display(), dest);
+        });
     }
+
+    // remove the temporary directory
+
 
     // adds the package to the database
     let pkginfo: Package = toml::from_str(&fs::read_to_string(format!("{}/md.toml", &dir)).unwrap()).unwrap();

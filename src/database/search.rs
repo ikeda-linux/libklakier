@@ -14,41 +14,41 @@ pub fn search(str: &str) -> Vec<Package> {
                 name: row.get(0).unwrap(),
                 version: row.get(1).unwrap(),
                 description: row.get(2).unwrap(),
-                license: row.get(4).unwrap(),
+                license: row.get(3).unwrap(),
                 authors: row
-                    .get::<usize, String>(5)
+                    .get::<usize, String>(4)
                     .unwrap()
                     .split(" || ")
                     .map(|s| s.to_string())
                     .collect::<Vec<String>>(),
                 tracked_files: row
-                    .get::<usize, String>(6)
+                    .get::<usize, String>(5)
                     .unwrap()
                     .split(" || ")
                     .map(|s| s.to_string())
                     .collect::<Vec<String>>(),
                 dependencies: Some(
-                    row.get::<usize, String>(7)
+                    row.get::<usize, String>(6)
                         .unwrap()
                         .split(" || ")
                         .map(|s| s.to_string())
                         .collect::<Vec<String>>(),
                 ),
                 provides: Some(
-                    row.get::<usize, String>(8)
+                    row.get::<usize, String>(7)
                         .unwrap()
                         .split(" || ")
                         .map(|s| s.to_string())
                         .collect::<Vec<String>>(),
                 ),
                 conflicts: Some(
-                    row.get::<usize, String>(9)
+                    row.get::<usize, String>(8)
                         .unwrap()
                         .split(" || ")
                         .map(|s| s.to_string())
                         .collect::<Vec<String>>(),
                 ),
-                arch: row.get(10).unwrap(),
+                arch: row.get(9).unwrap(),
             })
         })
         .unwrap();
