@@ -2,7 +2,6 @@ use std::{path::Path, fs::{File, self}, error::Error, process::Command};
 use blake2::{Blake2b, Digest};
 use zstd_util::ZstdContext;
 use tar::Archive;
-use glob::glob;
 use crate::database;
 
 use super::structs::Package;
@@ -43,7 +42,6 @@ pub fn install(pkg: &Path) -> Result<(), Box<dyn Error>> {
     }
 
     // copies everything from the overlay/ directory directly into /
-
     let overlay = format!("{}/overlay/", dir);
     Command::new("rsync")
         .args(&["-r", &overlay, "/"])
@@ -51,8 +49,6 @@ pub fn install(pkg: &Path) -> Result<(), Box<dyn Error>> {
         .unwrap_or_else(|err| {
             panic!("Failed to rsync from overlay to rootfs: {}", err);
         });
-
-    // remove the temporary directory
 
     // adds the package to the database
     let pkginfo: Package = toml::from_str(&fs::read_to_string(format!("{}/md.toml", &dir)).unwrap()).unwrap();
