@@ -44,7 +44,7 @@ pub fn install(pkg: &Path) -> Result<(), Box<dyn Error>> {
     // copies everything from the overlay/ directory directly into /
     let overlay = format!("{}/overlay/", dir);
     Command::new("rsync")
-        .args(&["-rp", &overlay, "/"])
+        .args(&["-r", &overlay, "/"])
         .status()
         .unwrap_or_else(|err| {
             panic!("Failed to rsync from overlay to rootfs: {}", err);
