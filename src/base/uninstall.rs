@@ -1,5 +1,5 @@
-use std::path::Path;
 use crate::database::{query::query, remove::remove};
+use std::path::Path;
 
 #[allow(dead_code)]
 pub fn uninstall(pkg: &str) {

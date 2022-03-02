@@ -17,12 +17,13 @@ pub fn initialise(dbpath: &Path, os: bool) -> Result<()> {
                 DEPENDENCIES TEXT,
                 PROVIDES TEXT,
                 CONFLICTS TEXT,
+                RECCOMENDATIONS TEXT,
                 ARCH TEXT
             )",
             [],
         )?;
         if os {
-                conn.execute(
+            conn.execute(
                 "CREATE TABLE IF NOT EXISTS SETTINGS (
                     KEY TEXT PRIMARY KEY,                
                 )",

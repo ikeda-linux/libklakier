@@ -47,7 +47,14 @@ pub fn query(str: &str, path: &Path) -> Package {
                         .map(|s| s.to_string())
                         .collect::<Vec<String>>(),
                 ),
-                arch: row.get(9).unwrap(),
+                reccomendations: Some(
+                    row.get::<usize, String>(9)
+                        .unwrap()
+                        .split(' ')
+                        .map(|s| s.to_string())
+                        .collect::<Vec<String>>(),
+                ),
+                arch: row.get(10).unwrap(),
             })
         })
         .unwrap();
@@ -61,6 +68,7 @@ pub fn query(str: &str, path: &Path) -> Package {
         dependencies: Some(vec!["".to_string()]),
         provides: Some(vec!["".to_string()]),
         conflicts: Some(vec!["".to_string()]),
+        reccomendations: Some(vec!["".to_string()]),
         arch: "".to_string(),
     };
     for row in rows {

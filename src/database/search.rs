@@ -17,37 +17,44 @@ pub fn search(str: &str, path: &Path) -> Vec<Package> {
                 authors: row
                     .get::<usize, String>(4)
                     .unwrap()
-                    .split(" || ")
+                    .split(' ')
                     .map(|s| s.to_string())
                     .collect::<Vec<String>>(),
                 tracked_files: row
                     .get::<usize, String>(5)
                     .unwrap()
-                    .split(" || ")
+                    .split(' ')
                     .map(|s| s.to_string())
                     .collect::<Vec<String>>(),
                 dependencies: Some(
                     row.get::<usize, String>(6)
                         .unwrap()
-                        .split(" || ")
+                        .split(' ')
                         .map(|s| s.to_string())
                         .collect::<Vec<String>>(),
                 ),
                 provides: Some(
                     row.get::<usize, String>(7)
                         .unwrap()
-                        .split(" || ")
+                        .split(' ')
                         .map(|s| s.to_string())
                         .collect::<Vec<String>>(),
                 ),
                 conflicts: Some(
                     row.get::<usize, String>(8)
                         .unwrap()
-                        .split(" || ")
+                        .split(' ')
                         .map(|s| s.to_string())
                         .collect::<Vec<String>>(),
                 ),
-                arch: row.get(9).unwrap(),
+                reccomendations: Some(
+                    row.get::<usize, String>(9)
+                        .unwrap()
+                        .split(' ')
+                        .map(|s| s.to_string())
+                        .collect::<Vec<String>>(),
+                ),
+                arch: row.get(10).unwrap(),
             })
         })
         .unwrap();

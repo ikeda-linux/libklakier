@@ -1,8 +1,13 @@
-use std::{path::Path, fs::{File, self}, error::Error, process::Command};
-use blake2::{Blake2b, Digest};
-use zstd_util::ZstdContext;
-use tar::Archive;
 use crate::database;
+use blake2::{Blake2b, Digest};
+use std::{
+    error::Error,
+    fs::{self, File},
+    path::Path,
+    process::Command,
+};
+use tar::Archive;
+use zstd_util::ZstdContext;
 
 use super::structs::Package;
 
@@ -10,9 +15,11 @@ use super::structs::Package;
 pub fn install(pkg: &Path) -> Result<(), Box<dyn Error>> {
     // decompress the .tar.zst packagefile
     let mut zstd = ZstdContext::new(11, Some(&[]));
-    let inflated = zstd.decompress(&fs::read(pkg).unwrap()).unwrap_or_else(|err| {
-        panic!("Failed to decompress {}: {}", pkg.display(), err);
-    });
+    let inflated = zstd
+        .decompress(&fs::read(pkg).unwrap())
+        .unwrap_or_else(|err| {
+            panic!("Failed to decompress {}: {}", pkg.display(), err);
+        });
 
     // hash the file to create a unique directory to unpack it to
     let mut hasher = Blake2b::new();
@@ -36,9 +43,10 @@ pub fn install(pkg: &Path) -> Result<(), Box<dyn Error>> {
 
     // initialise the database if not already found
     if !Path::new("/var/libdlta/db.sqlite").exists() {
-        database::initialise::initialise(Path::new(database::initialise::DATABASE_PATH), true).unwrap_or_else(|err| {
-            panic!("Failed to initialise database: {}", err);
-        });
+        database::initialise::initialise(Path::new(database::initialise::DATABASE_PATH), true)
+            .unwrap_or_else(|err| {
+                panic!("Failed to initialise database: {}", err);
+            });
     }
 
     // copies everything from the overlay/ directory directly into /
@@ -51,8 +59,13 @@ pub fn install(pkg: &Path) -> Result<(), Box<dyn Error>> {
         });
 
     // adds the package to the database
-    let pkginfo: Package = toml::from_str(&fs::read_to_string(format!("{}/md.toml", &dir)).unwrap()).unwrap();
-    database::add::add(pkginfo, Path::new(crate::database::initialise::DATABASE_PATH)).unwrap_or_else(|err| {
+    let pkginfo: Package =
+        toml::from_str(&fs::read_to_string(format!("{}/md.toml", &dir)).unwrap()).unwrap();
+    database::add::add(
+        pkginfo,
+        Path::new(crate::database::initialise::DATABASE_PATH),
+    )
+    .unwrap_or_else(|err| {
         panic!("Failed to add package to database: {}", err);
     });
 

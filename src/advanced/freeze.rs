@@ -5,10 +5,8 @@ pub fn freeze(oper: bool) {
     // sets FREEZE in table SETTINGS to true or false (based on the value of oper)
     // this will freeze package updates, installs and uninstalls until they are unfrozen manually
     let conn = Connection::open(DATABASE_PATH).unwrap();
-    conn.execute(
-        "UPDATE SETTINGS SET FREEZE = ? WHERE ID = 1",
-        &[&oper],
-    ).unwrap_or_else(|e| {
-        panic!("Error updating settings table: {}", e);
-    });
+    conn.execute("UPDATE SETTINGS SET FREEZE = ? WHERE ID = 1", &[&oper])
+        .unwrap_or_else(|e| {
+            panic!("Error updating settings table: {}", e);
+        });
 }
